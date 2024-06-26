@@ -14,7 +14,6 @@ export default defineConfig({
       }
     })
   ],
-  define: { "process.env.VITE_BACKEND_URI": JSON.stringify(process.env.VITE_BACKEND_URI) },
   server: {
     port: parseInt(process.env.VITE_PORT ? process.env.VITE_PORT : "3001")
   },

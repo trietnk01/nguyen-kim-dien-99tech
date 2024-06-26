@@ -1,8 +1,15 @@
 import React from "react";
+import axios from "axios";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import NumberFormat from "react-number-format";
-import { Button, Flex, Form, FormProps, Image, Input, Select, Row, Col } from "antd";
+import { Button, Flex, Form, FormProps, Image, Input, Select, Row, Col, SelectProps } from "antd";
 import { RetweetOutlined } from "@ant-design/icons";
 import styles from "@/assets/scss/home.module.scss";
+interface IFormInput {
+  amount: string;
+  currency_from: string;
+  currency_to: string;
+}
 type FieldType = {
   amount: string;
   currency_from: string;
@@ -14,65 +21,89 @@ const dataCurrency = [
   { value: "AUD", label: "AUD" }
 ];
 const HomePage = () => {
-  const [frmNews] = Form.useForm();
-  const [flagFrom, setFlagFrom] = React.useState<string>("USD");
-  const [flagTo, setFlagTo] = React.useState<string>("VND");
-  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    const { amount, currency_from, currency_to } = values;
-    frmNews.setFieldValue("amount", amount);
-    frmNews.setFieldValue("currency_from", currency_from);
-    frmNews.setFieldValue("currency_to", currency_to);
+  const {
+    handleSubmit,
+    control,
+    getValues,
+    setValue,
+    formState: { errors }
+  } = useForm<IFormInput>({
+    defaultValues: {
+      amount: "1,000",
+      currency_from: "USD",
+      currency_to: "VND"
+    }
+  });
+  const onSubmit: SubmitHandler<IFormInput> = async (dataForm) => {
+    let amountNumber: number = dataForm.amount ? parseInt(dataForm.amount.replace(",", "")) : 0;
+    let urlExchange = `https://v6.exchangerate-api.com/v6/${
+      import.meta.env.VITE_EXCHANGERATE_API
+    }/latest/${amountNumber}`;
+    let res = await axios.get(urlExchange);
+    console.log("res = ", res);
+  };
+  const handleAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | undefined
+  ) => {
+    setValue("amount", e && e.target && e.target.value ? e?.target.value.toString() : "");
   };
   const handleCurrencyFromChange = (e: any) => {
-    setFlagFrom(e.toString());
+    setValue("currency_from", e ? e.toString() : "");
   };
   const handleCurrencyToChange = (e: any) => {
-    setFlagTo(e.toString());
+    setValue("currency_to", e ? e.toString() : "");
   };
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <header>Currency converter</header>
-        <Form
-          form={frmNews}
-          layout="vertical"
-          onFinish={onFinish}
-          name="newsFrm"
-          className={styles.form}
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <div className={styles.amount}>
             <p>Enter Amount</p>
-            <Form.Item<FieldType>
+            <Controller
               name="amount"
-              rules={[{ required: true, message: "Please input your amount!" }]}
-              style={{ marginBottom: 0 }}
-            >
-              <NumberFormat
-                placeholder="Amount *"
-                customInput={Input}
-                thousandSeparator={true}
-                size="large"
-              />
-            </Form.Item>
+              control={control}
+              render={({ field }) => {
+                return (
+                  <NumberFormat
+                    placeholder="Amount *"
+                    customInput={Input}
+                    thousandSeparator={true}
+                    size="large"
+                    value={field.value}
+                    onChange={handleAmountChange}
+                  />
+                );
+              }}
+            />
           </div>
           <div className={styles.dropList}>
             <div className={styles.from}>
               <p>From</p>
               <div className={styles.selectBox}>
-                <img src={`/${flagFrom}.png`} alt="Flag" width={30} height={30} />
-                <Form.Item<FieldType>
+                <img
+                  src={`/${getValues("currency_from").toString()}.png`}
+                  alt="Flag"
+                  width={30}
+                  height={30}
+                />
+                <Controller
                   name="currency_from"
-                  rules={[{ required: true, message: "Please select currency!" }]}
-                  initialValue="USD"
-                  style={{ marginBottom: 0 }}
-                >
-                  <Select
-                    className={styles.txtSelected}
-                    size="large"
-                    options={dataCurrency}
-                    onChange={handleCurrencyFromChange}
-                  />
-                </Form.Item>
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <React.Fragment>
+                        <Select
+                          className={styles.txtSelected}
+                          size="large"
+                          options={dataCurrency}
+                          value={field.value}
+                          onChange={handleCurrencyFromChange}
+                        />
+                      </React.Fragment>
+                    );
+                  }}
+                />
               </div>
             </div>
             <div className={styles.icon}>
@@ -81,28 +112,41 @@ const HomePage = () => {
             <div className={styles.to}>
               <p>To</p>
               <div className={styles.selectBox}>
-                <img src={`/${flagTo}.png`} alt="Flag" width={30} height={30} />
-                <Form.Item<FieldType>
+                <img
+                  src={`/${getValues("currency_to").toString()}.png`}
+                  alt="Flag"
+                  width={30}
+                  height={30}
+                />
+                <Controller
                   name="currency_to"
-                  rules={[{ required: true, message: "Please select currency!" }]}
-                  initialValue="VND"
-                  style={{ marginBottom: 0 }}
-                >
-                  <Select
-                    className={styles.txtSelected}
-                    size="large"
-                    options={dataCurrency}
-                    onChange={handleCurrencyToChange}
-                  />
-                </Form.Item>
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <React.Fragment>
+                        <Select
+                          className={styles.txtSelected}
+                          size="large"
+                          options={dataCurrency}
+                          onChange={handleCurrencyToChange}
+                          value={field.value}
+                        />
+                      </React.Fragment>
+                    );
+                  }}
+                />
               </div>
             </div>
           </div>
           <div className={styles.exchangeRate}>
-            1 {flagFrom} = 118.16 {flagTo}
+            {getValues("amount") ? getValues("amount").toString() : ""}{" "}
+            {getValues("currency_from") ? getValues("currency_from") : ""} = 118.16{" "}
+            {getValues("currency_to") ? getValues("currency_to") : ""}
           </div>
-          <button type="submit">Get Exchange Rate</button>
-        </Form>
+          <Button htmlType="submit" type="primary" size="large">
+            Get Exchange Rate
+          </Button>
+        </form>
       </div>
     </div>
   );
