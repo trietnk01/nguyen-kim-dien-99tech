@@ -2,7 +2,7 @@ import NumberFormat from "react-number-format";
 import * as yup from "yup";
 import { RetweetOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, Spin } from "antd";
 import axios from "axios";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -22,6 +22,7 @@ const HomePage = () => {
   const [countries, setCountries] = React.useState<ICountry[]>([]);
   const [flagFrom, setFlagFrom] = React.useState<string>("US");
   const [flagTo, setFlagTo] = React.useState<string>("VN");
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const schema = yup
     .object({
       amount: yup.string().required("Amount required!")
@@ -49,13 +50,15 @@ const HomePage = () => {
     let urlExchange = `https://v6.exchangerate-api.com/v6/${
       import.meta.env.VITE_EXCHANGERATE_API
     }/latest/${dataForm.currency_from}`;
+    setIsLoading(true);
     let res = await axios.get(urlExchange);
     if (res && res.data && res.data.conversion_rates) {
       const rateCurrency: number = parseFloat(
         res.data.conversion_rates[dataForm.currency_to].toString()
       );
-      let totalExchange: number = Math.round(amountNumber * rateCurrency);
+      let totalExchange: number = amountNumber * rateCurrency;
       setValue("total_exchange", totalExchange);
+      setIsLoading(false);
     }
   };
   const handleAmountChange = (
@@ -176,18 +179,27 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className={styles.exchangeRate}>
-            {getValues("amount") ? getValues("amount").toString() : ""}{" "}
-            {getValues("currency_from") ? getValues("currency_from") : ""} ={" "}
-            {new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-              maximumFractionDigits: 0
-            })
-              .format(getValues("total_exchange"))
-              .replace("$", "")}{" "}
-            {getValues("currency_to") ? getValues("currency_to") : ""}
-          </div>
+          {isLoading ? (
+            <div className={styles.blockLoading}>
+              <Spin tip="Loading" size="large" className={styles.spin}></Spin>
+            </div>
+          ) : (
+            <div className={styles.exchangeRate}>
+              {getValues("amount") ? getValues("amount").toString() : ""}{" "}
+              {getValues("currency_from") ? getValues("currency_from") : ""} ={" "}
+              <span className={styles.totalExchange}>
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  maximumFractionDigits: 0
+                })
+                  .format(getValues("total_exchange"))
+                  .replace("$", "")}
+              </span>{" "}
+              {getValues("currency_to") ? getValues("currency_to") : ""}
+            </div>
+          )}
+
           <Button htmlType="submit" type="primary" size="large">
             Get Exchange Rate
           </Button>
