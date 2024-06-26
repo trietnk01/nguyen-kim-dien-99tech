@@ -181,7 +181,7 @@ const HomePage = () => {
           </div>
           {isLoading ? (
             <div className={styles.blockLoading}>
-              <Spin tip="Loading" size="large" className={styles.spin}></Spin>
+              <Spin size="large" className={styles.spin}></Spin>
             </div>
           ) : (
             <div className={styles.exchangeRate}>
@@ -199,7 +199,6 @@ const HomePage = () => {
               {getValues("currency_to") ? getValues("currency_to") : ""}
             </div>
           )}
-
           <Button htmlType="submit" type="primary" size="large">
             Get Exchange Rate
           </Button>
