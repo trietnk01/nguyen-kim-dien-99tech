@@ -32,6 +32,11 @@
         font-size: 18px;
         margin-bottom: 5px;
       }
+      .errors {
+        color: red;
+        margin-top: 5px;
+        font-family: $f_KontrapunktMiki_Regular;
+      }
       .dropList {
         display: flex;
         align-items: center;
