@@ -7,7 +7,7 @@ import axios from "axios";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import styles from "@/assets/scss/home.module.scss";
-import country_list from "./country-list";
+import { country_list } from "@/configs";
 interface IFormInput {
   amount: string;
   currency_from: string;
@@ -46,7 +46,6 @@ const HomePage = () => {
     let amountNumber: number = dataForm.amount
       ? parseInt(dataForm.amount.toString().replace(new RegExp(",", "g"), ""))
       : 0;
-    console.log("amountNumber = ", amountNumber);
     let urlExchange = `https://v6.exchangerate-api.com/v6/${
       import.meta.env.VITE_EXCHANGERATE_API
     }/latest/${dataForm.currency_from}`;
