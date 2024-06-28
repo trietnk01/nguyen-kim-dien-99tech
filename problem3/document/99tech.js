@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : My papaya
+ Source Server         : My scentronix
  Source Server Type    : MongoDB
  Source Server Version : 60015 (6.0.15)
- Source Host           : localhost:4201
- Source Schema         : papaya
+ Source Host           : localhost:27017
+ Source Schema         : scentronix
 
  Target Server Type    : MongoDB
  Target Server Version : 60015 (6.0.15)
  File Encoding         : 65001
 
- Date: 09/05/2024 21:04:43
+ Date: 13/06/2024 22:48:50
 */
 
 
@@ -181,6 +181,36 @@ db.getCollection("news").insert([ {
 } ]);
 
 // ----------------------------
+// Collection structure for servers
+// ----------------------------
+db.getCollection("servers").drop();
+db.createCollection("servers");
+
+// ----------------------------
+// Documents of servers
+// ----------------------------
+db.getCollection("servers").insert([ {
+    _id: ObjectId("666a66dfb6ece150d3075d79"),
+    url: "https://does-not-work.perfume.new",
+    priority: 1
+} ]);
+db.getCollection("servers").insert([ {
+    _id: ObjectId("666a66dfb6ece150d3075d7a"),
+    url: "https://gitlab.com",
+    priority: 4
+} ]);
+db.getCollection("servers").insert([ {
+    _id: ObjectId("666a66dfb6ece150d3075d7b"),
+    url: "http://app.scnt.me",
+    priority: 3
+} ]);
+db.getCollection("servers").insert([ {
+    _id: ObjectId("666a66dfb6ece150d3075d7c"),
+    url: "https://offline.scentronix.com",
+    priority: 2
+} ]);
+
+// ----------------------------
 // Collection structure for users
 // ----------------------------
 db.getCollection("users").drop();
@@ -191,9 +221,9 @@ db.createCollection("users");
 // ----------------------------
 db.getCollection("users").insert([ {
     _id: "2b5caaa9-e516-4fb8-b060-cf16c0eba54f",
-    username: "hrpapaya",
+    username: "admin",
     password: "$2a$10$PspYayBz1LKXwZXomqRubeq7wTZZvpYG85Pc4U4jd.QzJjqjBU1Ai",
-    email: "hrpapaya@dienkim.vn",
-    display_name: "HR Papaya",
+    email: "admin@dienkim.vn",
+    display_name: "HR admin",
     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiMmI1Y2FhYTktZTUxNi00ZmI4LWIwNjAtY2YxNmMwZWJhNTRmIiwidXNlcm5hbWUiOiJocnBhcGF5YSIsImRpc3BsYXlfbmFtZSI6IkhSIFBhcGF5YSIsImVtYWlsIjoiaHJwYXBheWFAZGllbmtpbS52biIsImlhdCI6MTcxNTI0NzYwNiwiZXhwIjoxNzE1Njc5NjA2fQ.3poLVX2zY0d3zTVSVIJ0u7l9sDfaKlFT0iZVN3i9K0E"
 } ]);

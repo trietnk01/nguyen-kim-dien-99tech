@@ -1,9 +1,35 @@
-# 1. Clone code from https://github.com/trietnk01/my-papaya from main branch
+# 1. docker compose -p env_local_my_99tech -f docker-compose.env.local.yaml up -d
 
-# 2. Please open the document to get instruction screenshot
+# 2. docker exec -it mongo_99tech_env_local /bin/bash
 
-# 3. Please import postman json file created by diennk and named .json type . Like that Category-News.postman_collection.json / News.postman_collection.json / User.postman_collection.json
+# 3. mongosh -u root -p
 
-# 4. Please create Environment base_url and token . base_url = http://14.225.218.38:8000
+# 4. Enter password : Godofwar246357
 
-# Thanks and Best regards
+# 5. use tech99;
+
+# 6. db.createUser(
+
+# {
+
+# user: "root",
+
+# pwd: "99tech246357",
+
+# roles: [
+
+# { role : "readWrite", db: "tech99" }
+
+# ]
+
+# }
+
+# );
+
+# 7. cd /problem3/stack-be run command npm run dev
+
+# 8. cd /problem3/stack-fe run command npm run dev
+
+# 9 .Check Backend run port http://localhost:8000
+
+# 10 .Check Frontend run port http://localhost:3000
