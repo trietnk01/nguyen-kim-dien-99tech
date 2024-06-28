@@ -1,2 +1,2 @@
-# 1. cd problem2
+# 1. cd problem3
 # 2. npm run dev

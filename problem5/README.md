@@ -17,5 +17,5 @@
 # 8. Import database from /problem5/document/99tech.js
 # 9.    cd /problem5/stack-be and run command npm run dev
 # 10.   cd /problem5/stack-fe and run command npm run dev
-# 11 .  Check Backend run port and http://localhost:8000
-# 12 .  Check Frontend run port http://localhost:3000
+# 11 .  Check Backend run port and http://localhost:8005
+# 12 .  Check Frontend run port http://localhost:3005

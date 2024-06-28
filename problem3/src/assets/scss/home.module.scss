@@ -1,0 +1,109 @@
+@import "color.scss";
+@import "font.scss";
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #675afe;
+  .wrapper {
+    width: 370px;
+    padding: 30px;
+    border-radius: 7px;
+    background-color: #fff;
+    header {
+      font-family: $f_KontrapunktMiki_Bold;
+      text-align: center;
+      font-size: 30px;
+    }
+    .form {
+      margin: 40px 0 20px 0;
+      input {
+        height: 50px;
+        border: 1px solid #999;
+        padding: 0 15px;
+        font-size: 17px;
+        &:focus {
+          border: 2px solid #675afe;
+        }
+      }
+      p {
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+      .errors {
+        color: red;
+        margin-top: 5px;
+        font-family: $f_KontrapunktMiki_Regular;
+      }
+      .dropList {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        .selectBox {
+          display: flex;
+          width: 115px;
+          height: 45px;
+          border-radius: 5px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #999;
+          .selected {
+            width: auto;
+            font-size: 16px;
+            margin: 0 -5px 0 5px;
+          }
+          img {
+            width: 25px;
+          }
+          .txtSelected {
+            > div {
+              border: 0;
+              outline: 0;
+              &:focus {
+                border: 0;
+                outline: 0;
+              }
+            }
+          }
+        }
+        .icon {
+          cursor: pointer;
+          font-size: 22px;
+          margin-top: 30px;
+        }
+      }
+      .blockLoading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .spin {
+          margin-top: 20px;
+          margin-bottom: 20px;
+        }
+      }
+      .exchangeRate {
+        font-size: 17px;
+        margin: 30px 0 30px;
+        .totalExchange {
+          font-family: $f_KontrapunktMiki_Bold;
+        }
+      }
+      button {
+        height: 52px;
+        color: #fff;
+        font-size: 17px;
+        cursor: pointer;
+        background-color: #675afe;
+      }
+    }
+  }
+  form :where(input, select, button) {
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+  }
+}
