@@ -1,0 +1,62 @@
+upstream client-testing-papaya{
+	server localhost:3002;
+}
+upstream client-production-papaya{
+        server localhost:3004;
+}
+upstream api-dien-name-vn{
+	server localhost:8004;
+}
+server {
+	listen 443      ssl;
+        ssl     on;
+        ssl_certificate         /ssls/papaya/testing.papaya.dien.name.vn/certificate.crt;
+        ssl_certificate_key     /ssls/papaya/testing.papaya.dien.name.vn/private.key;
+        server_name testing.papaya.dien.name.vn;
+        location / {
+                proxy_pass http://client-testing-papaya ;
+		proxy_set_header X-Real-IP $remote_addr;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        	proxy_set_header Host $host;
+	        proxy_set_header X-NginX-Proxy true;
+        }
+}
+server {
+        listen 443      ssl;
+        ssl     on;
+        ssl_certificate         /ssls/papaya/dien.name.vn/certificate.crt;
+        ssl_certificate_key     /ssls/papaya/dien.name.vn/private.key;
+        server_name dien.name.vn;
+        location / {
+                proxy_pass http://client-production-papaya ;
+		proxy_set_header X-Real-IP $remote_addr;
+        	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        proxy_set_header Host $host;
+        	proxy_set_header X-NginX-Proxy true;
+        }
+}
+server {
+        listen 443      ssl;
+        ssl     on;
+        ssl_certificate         /ssls/papaya/api.dien.name.vn/certificate.crt;
+        ssl_certificate_key     /ssls/papaya/api.dien.name.vn/private.key;
+        server_name api.dien.name.vn;
+        location / {
+                proxy_pass http://api-dien-name-vn ;
+		proxy_set_header X-Real-IP $remote_addr;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        	proxy_set_header Host $host;
+	        proxy_set_header X-NginX-Proxy true;
+        }
+}
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+	server_name _;
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
+
