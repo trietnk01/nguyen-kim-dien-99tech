@@ -8,204 +8,79 @@ import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import styles from "@/assets/scss/home.module.scss";
 import { country_list } from "@/configs";
-interface IFormInput {
-  amount: string;
-  currency_from: string;
-  currency_to: string;
-  total_exchange: number;
+interface WalletBalance {
+  currency: string;
+  amount: number;
 }
-interface ICountry {
-  value: string;
-  label: string;
+interface FormattedWalletBalance {
+  currency: string;
+  amount: number;
+  formatted: string;
 }
+
 const HomePage = () => {
-  const [countries, setCountries] = React.useState<ICountry[]>([]);
-  const [flagFrom, setFlagFrom] = React.useState<string>("US");
-  const [flagTo, setFlagTo] = React.useState<string>("VN");
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const schema = yup
-    .object({
-      amount: yup.string().required("Amount required!")
-    })
-    .required();
-  const {
-    handleSubmit,
-    control,
-    getValues,
-    setValue,
-    formState: { errors }
-  } = useForm<IFormInput>({
-    defaultValues: {
-      amount: "1,000",
-      currency_from: "USD",
-      currency_to: "VND",
-      total_exchange: 0
-    },
-    resolver: yupResolver(schema)
+  const { children, ...rest } = props;
+  const balances = useWalletBalances();
+  const prices = usePrices();
+
+  const getPriority = (blockchain: any): number => {
+    switch (blockchain) {
+      case "Osmosis":
+        return 100;
+      case "Ethereum":
+        return 50;
+      case "Arbitrum":
+        return 30;
+      case "Zilliqa":
+        return 20;
+      case "Neo":
+        return 20;
+      default:
+        return -99;
+    }
+  };
+  const sortedBalances = useMemo(() => {
+    return balances
+      .filter((balance: WalletBalance) => {
+        const balancePriority = getPriority(balance.blockchain);
+        if (lhsPriority > -99) {
+          if (balance.amount <= 0) {
+            return true;
+          }
+        }
+        return false;
+      })
+      .sort((lhs: WalletBalance, rhs: WalletBalance) => {
+        const leftPriority = getPriority(lhs.blockchain);
+        const rightPriority = getPriority(rhs.blockchain);
+        if (leftPriority > rightPriority) {
+          return -1;
+        } else if (rightPriority > leftPriority) {
+          return 1;
+        }
+      });
+  }, [balances, prices]);
+
+  const formattedBalances = sortedBalances.map((balance: WalletBalance) => {
+    return {
+      ...balance,
+      formatted: balance.amount.toFixed()
+    };
   });
-  const onSubmit: SubmitHandler<IFormInput> = async (dataForm) => {
-    let amountNumber: number = dataForm.amount
-      ? parseInt(dataForm.amount.toString().replace(new RegExp(",", "g"), ""))
-      : 0;
-    let urlExchange = `https://v6.exchangerate-api.com/v6/${
-      import.meta.env.VITE_EXCHANGERATE_API
-    }/latest/${dataForm.currency_from}`;
-    setIsLoading(true);
-    let res = await axios.get(urlExchange);
-    if (res && res.data && res.data.conversion_rates) {
-      const rateCurrency: number = parseFloat(
-        res.data.conversion_rates[dataForm.currency_to].toString()
-      );
-      let totalExchange: number = amountNumber * rateCurrency;
-      setValue("total_exchange", totalExchange);
-      setIsLoading(false);
-    }
-  };
-  const handleAmountChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | undefined
-  ) => {
-    setValue("amount", e && e.target && e.target.value ? e?.target.value.toString() : "");
-  };
-  const handleCurrencyFromChange = (e: any) => {
-    setValue("currency_from", e ? e.toString() : "");
-    setFlagFrom((country_list as any)[e?.toString()].toString());
-  };
-  const handleCurrencyToChange = (e: any) => {
-    setValue("currency_to", e ? e.toString() : "");
-    setFlagTo((country_list as any)[e?.toString()].toString());
-  };
-  React.useEffect(() => {
-    let countryList: ICountry[] = [];
-    for (let country in country_list) {
-      countryList.push({ value: country, label: country });
-    }
-    setCountries(countryList);
-  }, []);
-  const handleSwitchCountry = () => {
-    const currencyFrom: string = getValues("currency_from");
-    const currencyTo: string = getValues("currency_to");
-    const flagFrom: string = (country_list as any)[currencyFrom].toString();
-    const flagTo: string = (country_list as any)[currencyTo].toString();
-    setValue("currency_from", currencyTo);
-    setValue("currency_to", currencyFrom);
-    setFlagFrom(flagTo);
-    setFlagTo(flagFrom);
-  };
-  return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <header>Currency converter</header>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          <div className={styles.amount}>
-            <p>Enter Amount</p>
-            <Controller
-              name="amount"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <React.Fragment>
-                    <NumberFormat
-                      placeholder="Amount *"
-                      customInput={Input}
-                      thousandSeparator={true}
-                      size="large"
-                      value={field.value}
-                      onChange={handleAmountChange}
-                    />
-                    {errors.amount && <div className={styles.errors}>{errors.amount.message}</div>}
-                  </React.Fragment>
-                );
-              }}
-            />
-          </div>
-          <div className={styles.dropList}>
-            <div className={styles.from}>
-              <p>From</p>
-              <div className={styles.selectBox}>
-                <img
-                  src={`https://flagsapi.com/${flagFrom}/flat/64.png`}
-                  alt="Flag"
-                  width={30}
-                  height={30}
-                />
-                <Controller
-                  name="currency_from"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <React.Fragment>
-                        <Select
-                          className={styles.txtSelected}
-                          size="large"
-                          options={countries}
-                          value={field.value}
-                          onChange={handleCurrencyFromChange}
-                        />
-                      </React.Fragment>
-                    );
-                  }}
-                />
-              </div>
-            </div>
-            <div className={styles.icon}>
-              <RetweetOutlined onClick={handleSwitchCountry} />
-            </div>
-            <div className={styles.to}>
-              <p>To</p>
-              <div className={styles.selectBox}>
-                <img
-                  src={`https://flagsapi.com/${flagTo}/flat/64.png`}
-                  alt="Flag"
-                  width={30}
-                  height={30}
-                />
-                <Controller
-                  name="currency_to"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <React.Fragment>
-                        <Select
-                          className={styles.txtSelected}
-                          size="large"
-                          options={countries}
-                          onChange={handleCurrencyToChange}
-                          value={field.value}
-                        />
-                      </React.Fragment>
-                    );
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-          {isLoading ? (
-            <div className={styles.blockLoading}>
-              <Spin size="large" className={styles.spin}></Spin>
-            </div>
-          ) : (
-            <div className={styles.exchangeRate}>
-              {getValues("amount") ? getValues("amount").toString() : ""}{" "}
-              {getValues("currency_from") ? getValues("currency_from") : ""} ={" "}
-              <span className={styles.totalExchange}>
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  maximumFractionDigits: 0
-                })
-                  .format(getValues("total_exchange"))
-                  .replace("$", "")}
-              </span>{" "}
-              {getValues("currency_to") ? getValues("currency_to") : ""}
-            </div>
-          )}
-          <Button htmlType="submit" type="primary" size="large">
-            Get Exchange Rate
-          </Button>
-        </form>
-      </div>
-    </div>
-  );
+
+  const rows = sortedBalances.map((balance: FormattedWalletBalance, index: number) => {
+    const usdValue = prices[balance.currency] * balance.amount;
+    return (
+      <WalletRow
+        className={classes.row}
+        key={index}
+        amount={balance.amount}
+        usdValue={usdValue}
+        formattedAmount={balance.formatted}
+      />
+    );
+  });
+  return <div {...rest}>{rows}</div>;
 };
 
 export default HomePage;
