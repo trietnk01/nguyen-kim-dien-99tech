@@ -53,6 +53,7 @@ const HomePage = () => {
     setIsLoading(true);
     let res = await axios.get(urlExchange);
     if (res && res.data && res.data.conversion_rates) {
+      console.log("res.data.conversion_rates = ", res.data.conversion_rates);
       const rateCurrency: number = parseFloat(
         res.data.conversion_rates[dataForm.currency_to].toString()
       );

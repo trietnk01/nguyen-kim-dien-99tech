@@ -1,0 +1,32 @@
+@import "color.scss";
+@import "font.scss";
+.box {
+  width: 242px;
+  border: 1px solid #00000015;
+  padding: 10px 20px;
+  margin-top: 20px;
+  .boxImg {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .img {
+      width: 160px;
+    }
+  }
+  .title {
+    text-align: center;
+    font-family: $f_KontrapunktMiki_Bold;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  .priceBox {
+    margin-top: 8px;
+    text-align: center;
+    .totalExchange {
+      font-family: $f_GeneralSans_Medium;
+    }
+    .priceLabel {
+      font-size: 12px;
+    }
+  }
+}

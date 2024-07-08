@@ -1,0 +1,14 @@
+@import "color.scss";
+@import "font.scss";
+.wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .container {
+    width: 1000px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+    column-gap: 10px;
+  }
+}
