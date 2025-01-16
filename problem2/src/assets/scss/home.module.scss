@@ -1,5 +1,5 @@
-@import "color.scss";
-@import "font.scss";
+@use "color.scss";
+@use "font.scss";
 .container {
   width: 100%;
   min-height: 100vh;
@@ -13,7 +13,7 @@
     border-radius: 7px;
     background-color: #fff;
     header {
-      font-family: $f_KontrapunktMiki_Bold;
+      font-family: font.$f_KontrapunktMiki_Bold;
       text-align: center;
       font-size: 30px;
     }
@@ -35,7 +35,7 @@
       .errors {
         color: red;
         margin-top: 5px;
-        font-family: $f_KontrapunktMiki_Regular;
+        font-family: font.$f_KontrapunktMiki_Regular;
       }
       .dropList {
         display: flex;
@@ -88,7 +88,7 @@
         font-size: 17px;
         margin: 30px 0 30px;
         .totalExchange {
-          font-family: $f_KontrapunktMiki_Bold;
+          font-family: font.$f_KontrapunktMiki_Bold;
         }
       }
       button {
