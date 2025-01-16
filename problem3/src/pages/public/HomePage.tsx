@@ -10,20 +10,29 @@ import styles from "@/assets/scss/home.module.scss";
 import { country_list } from "@/configs";
 import WalletRow from "@/components/WalletRow";
 interface WalletBalance {
+  productName:string;
   currency: string;
   amount: number;
   blockchain: string;
+  urlImg:string;
 }
 const HomePage = () => {
   const balances: WalletBalance[] = [
-    { currency: "TMT", amount: 2000, blockchain: "Osmosis" },
-    { currency: "TND", amount: 3000, blockchain: "Ethereum" },
-    { currency: "TOP", amount: 4000, blockchain: "Arbitrum" },
-    { currency: "TRY", amount: 5000, blockchain: "Zilliqa" },
-    { currency: "TTD", amount: 6000, blockchain: "Neo" },
-    { currency: "TVD", amount: 7000, blockchain: "Osmosis" },
-    { currency: "TWD", amount: 8000, blockchain: "Arbitrum" },
-    { currency: "TZS", amount: 9000, blockchain: "Zilliqa" }
+    { productName:"Product 1",currency: "TMT", amount: 2000, blockchain: "Osmosis",urlImg:"/product-1.jpg" },
+    { productName:"Product 2",currency: "TND", amount: 3000, blockchain: "Ethereum",urlImg:"/product-2.jpg" },
+    { productName:"Product 3",currency: "TOP", amount: 4000, blockchain: "Arbitrum",urlImg:"/product-3.png" },
+    { productName:"Product 4", currency: "TRY", amount: 5000, blockchain: "Zilliqa",urlImg:"/product-4.jpg" },
+    { productName:"Product 5",currency: "TTD", amount: 6000, blockchain: "Neo",urlImg:"/product-5.jpg" },
+    { productName:"Product 6",currency: "TVD", amount: 7000, blockchain: "Osmosis",urlImg:"/product-6.jpg"},
+    { productName:"Product 7",currency: "TWD", amount: 8000, blockchain: "Arbitrum" ,urlImg:"/product-7.jpg"},
+    { productName:"Product 8",currency: "TZS", amount: 9000, blockchain: "Zilliqa",urlImg:"/product-8.jpg" },
+    { productName:"Product 9",currency: "TMT", amount: 2000, blockchain: "Osmosis",urlImg:"/product-9.jpg" },
+    { productName:"Product 10",currency: "TND", amount: 3000, blockchain: "Ethereum",urlImg:"/product-10.jpg" },
+    { productName:"Product 11",currency: "TOP", amount: 4000, blockchain: "Arbitrum",urlImg:"/product-11.jpg" },
+    { productName:"Product 12", currency: "TRY", amount: 5000, blockchain: "Zilliqa" ,urlImg:"/product-12.jpg"},
+    { productName:"Product 13",currency: "TTD", amount: 6000, blockchain: "Neo" ,urlImg:"/product-13.jpg"},
+    { productName:"Product 14",currency: "TVD", amount: 7000, blockchain: "Osmosis",urlImg:"/product-14.jpg" },
+    { productName:"Product 15",currency: "TVD", amount: 7000, blockchain: "Osmosis",urlImg:"/product-15.png" },
   ];
   const prices: any = {
     USD: 1,
@@ -218,13 +227,13 @@ const HomePage = () => {
       });
   }, [balances]);
   const rows = sortedBalances.map((balance: WalletBalance, idx: number) => {
-    const formattedAmount = balance.amount.toFixed();
-    const usdValue: number = parseInt(prices[balance.currency]) * balance.amount;
+    const usdValue: number = parseFloat(prices[balance.currency]) * balance.amount;
     return (
       <WalletRow
         key={`wallet-idx-${idx}`}
-        amount={balance.amount}
-        formattedAmount={formattedAmount}
+        productName={balance.productName}
+        urlImg={balance.urlImg}
+        amount={balance.amount}        
         usdValue={usdValue}
       />
     );

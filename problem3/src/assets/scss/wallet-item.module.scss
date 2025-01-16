@@ -1,10 +1,11 @@
-@import "color.scss";
-@import "font.scss";
+@use "color.scss";
+@use "font.scss";
 .box {
-  width: 242px;
+  width: 215px;
   border: 1px solid #00000015;
   padding: 10px 20px;
   margin-top: 20px;
+  border-radius:5px;
   .boxImg {
     width: 100%;
     display: flex;
@@ -15,7 +16,7 @@
   }
   .title {
     text-align: center;
-    font-family: $f_KontrapunktMiki_Bold;
+    font-family: font.$f_KontrapunktMiki_Bold;
     font-size: 14px;
     margin-top: 8px;
   }
@@ -23,7 +24,11 @@
     margin-top: 8px;
     text-align: center;
     .totalExchange {
-      font-family: $f_GeneralSans_Medium;
+      font-family: font.$f_GeneralSans_Medium;
+      font-size:13px
+    }
+    .lastUSD{
+      font-size:10px
     }
     .priceLabel {
       font-size: 12px;

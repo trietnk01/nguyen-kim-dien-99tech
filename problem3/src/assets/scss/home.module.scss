@@ -1,11 +1,11 @@
-@import "color.scss";
-@import "font.scss";
+@use "color.scss";
+@use "font.scss";
 .wrapper {
   display: flex;
   width: 100%;
   justify-content: center;
   .container {
-    width: 1000px;
+    width: 1115px;
     display: flex;
     flex-wrap: wrap;
     padding-bottom: 20px;

@@ -2,17 +2,18 @@ import React from "react";
 import styles from "@/assets/scss/wallet-item.module.scss";
 
 interface IWallet {
+  productName:string;
   amount: number;
-  usdValue: number;
-  formattedAmount: string;
+  usdValue: number;  
+  urlImg:string;
 }
-const WalletRow: React.FC<IWallet> = ({ amount, usdValue, formattedAmount }) => {
+const WalletRow: React.FC<IWallet> = ({ productName,amount, usdValue ,urlImg}) => {
   return (
     <div className={styles.box}>
       <div className={styles.boxImg}>
-        <img src="/laptop.png" className={styles.img} />
+        <img src={urlImg} className={styles.img} />
       </div>
-      <h3 className={styles.title}>Title</h3>
+      <h3 className={styles.title}>{productName}</h3>
       <div className={styles.priceBox}>
         <span className={styles.priceLabel}>Amount: </span>
         <span className={styles.totalExchange}>
@@ -40,7 +41,13 @@ const WalletRow: React.FC<IWallet> = ({ amount, usdValue, formattedAmount }) => 
       </div>
       <div className={styles.priceBox}>
         <span className={styles.priceLabel}>FormattedAmount: </span>
-        <span className={styles.totalExchange}>{formattedAmount}</span> USD
+        <span className={styles.totalExchange}>{new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0
+          })
+            .format(parseInt(amount.toFixed(2)) )
+            .replace("$", "")}</span>&nbsp;<span className={styles.lastUSD}>USD</span>
       </div>
     </div>
   );
